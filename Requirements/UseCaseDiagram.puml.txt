@@ -1,0 +1,55 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor Renter
+actor Host
+actor Admin
+
+rectangle "Smart Rental Platform (RentMate)" {
+
+  usecase "Register / Login" as UC1
+  usecase "Manage Profile" as UC2
+  usecase "Search & Filter Listings" as UC3
+  usecase "View Listing Details" as UC4
+  usecase "Chat with GenAI Concierge" as UC5
+  usecase "Request Booking" as UC6
+  usecase "Make Payment (Prototype)" as UC7
+  usecase "Cancel Booking" as UC8
+  usecase "Leave Review & Rating" as UC9
+
+  usecase "Create / Edit Listing" as UC10
+  usecase "Manage Availability" as UC11
+  usecase "Approve / Reject Booking" as UC12
+  usecase "Respond to Review" as UC13
+
+  usecase "Moderate Users/Listings" as UC14
+  usecase "Handle Disputes" as UC15
+
+  UC6 .> UC4 : <<include>>
+  UC6 .> UC3 : <<extend>>
+  UC7 .> UC6 : <<include>>
+  UC9 .> UC6 : <<include>>
+  UC5 .> UC3 : <<extend>>
+}
+
+Renter --> UC1
+Renter --> UC2
+Renter --> UC3
+Renter --> UC4
+Renter --> UC5
+Renter --> UC6
+Renter --> UC7
+Renter --> UC8
+Renter --> UC9
+
+Host --> UC1
+Host --> UC2
+Host --> UC10
+Host --> UC11
+Host --> UC12
+Host --> UC13
+
+Admin --> UC14
+Admin --> UC15
+@enduml
