@@ -1,0 +1,27 @@
+@startuml
+title Robustness - Chat with GenAI Concierge
+skinparam shadowing false
+skinparam linetype ortho
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 35
+
+actor "Renter" as R
+boundary "Chat UI" as UI
+control "Chatbot Controller" as CC
+entity "Chat Session" as S
+entity "Message" as M
+entity "Listing" as L
+
+R  -> UI : openChat()
+UI -> CC : startSession()
+CC -> S  : loadOrCreate(userId)
+CC -> UI : promptQuestions()
+
+R  -> UI : sendMessage(text)
+UI -> CC : forwardMessage(text)
+CC -> M  : saveUserMessage(text)
+CC -> L  : recommend(preferences)
+CC -> M  : saveBotReply(reply)
+CC -> UI : showReply(reply)
+
+@enduml
