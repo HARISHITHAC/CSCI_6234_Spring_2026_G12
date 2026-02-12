@@ -1,0 +1,30 @@
+@startuml
+title Robustness - Request Booking
+skinparam shadowing false
+skinparam linetype ortho
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 35
+
+actor "Renter" as R
+boundary "Booking UI" as UI
+control "Booking Controller" as BC
+entity "Listing" as L
+entity "Availability Slot" as AS
+entity "Booking" as B
+
+R  -> UI : selectListingAndDates()
+UI -> BC : requestBooking(listingId, dates)
+
+BC -> L  : loadListing(listingId)
+L  --> BC : listingDetails
+
+BC -> AS : checkAvailability(listingId, dates)
+AS --> BC : available?/not
+
+BC -> B  : createDraft(renterId, listingId, dates)
+B  --> BC : bookingDraft(quote)
+
+BC --> UI : displayDraft(quote,status)
+UI --> R  : showDraft()
+
+@enduml
