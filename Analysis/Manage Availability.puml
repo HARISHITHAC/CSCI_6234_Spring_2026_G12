@@ -1,0 +1,34 @@
+@startuml
+title Robustness - Manage Availability
+skinparam shadowing false
+skinparam linetype ortho
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 35
+
+actor "Host" as H
+boundary "Availability UI" as UI
+control "Availability Controller" as AC
+entity "Listing" as L
+entity "Availability Slot" as AS
+
+== Block Dates ==
+H  -> UI : blockDates(range)
+UI -> AC : blockDates(listingId, start, end)
+AC -> L  : verifyOwnership(listingId, hostId)
+L  --> AC : ok/notOk
+AC -> AS : createBlockedSlot(start,end)
+AS --> AC : slotId
+AC -> AS : saveSlot(listingId, slotId)
+AS --> AC : saved
+AC --> UI : calendarUpdated()
+UI --> H  : showCalendar()
+
+== Open Dates ==
+H  -> UI : openDates(range)
+UI -> AC : openDates(listingId, start, end)
+AC -> AS : removeOrMarkOpen(listingId, start, end)
+AS --> AC : updated
+AC --> UI : calendarUpdated()
+UI --> H  : showCalendar()
+
+@enduml
