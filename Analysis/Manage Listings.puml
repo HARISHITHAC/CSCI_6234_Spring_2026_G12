@@ -1,0 +1,31 @@
+@startuml
+title Robustness - Manage Listings
+skinparam shadowing false
+skinparam linetype ortho
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 35
+
+actor "Host" as H
+boundary "Host Listings UI" as UI
+control "Listing Controller" as LC
+entity "Listing" as L
+
+== Create/Update Listing ==
+H  -> UI : enterListingDetails()
+UI -> LC : createOrUpdate(listingData)
+LC -> L  : validate(listingData)
+L  --> LC : valid/invalid
+LC -> L  : save(listingData)
+L  --> LC : listingId
+LC --> UI : confirmation(listingId)
+UI --> H  : showConfirmation()
+
+== Deactivate Listing ==
+H  -> UI : deactivateListing()
+UI -> LC : deactivate(listingId)
+LC -> L  : setStatus(INACTIVE)
+L  --> LC : updated
+LC --> UI : statusUpdated()
+UI --> H  : showStatus()
+
+@enduml
