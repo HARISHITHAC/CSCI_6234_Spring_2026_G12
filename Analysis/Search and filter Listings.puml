@@ -1,0 +1,27 @@
+@startuml
+title Robustness - Search & Filter Listings
+
+' Robustness roles as sequence participants (per PlantUML guide)
+actor "Renter" as R
+boundary "Search UI" as UI
+control "Search Controller" as SC
+entity "Listing" as L
+entity "Availability Slot" as AS
+
+' Neat rendering controls
+skinparam shadowing false
+skinparam linetype ortho
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 35
+
+' Main flow
+R  -> UI : enterCriteria()
+UI -> SC : submitFilters(criteria)
+SC -> L  : findListings(criteria)
+L  --> SC : listings
+SC -> AS : checkAvailability(listingIds, dates)
+AS --> SC : availability
+SC --> UI : results(listings, availability)
+UI --> R  : showResults()
+
+@enduml
