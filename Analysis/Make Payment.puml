@@ -1,0 +1,29 @@
+@startuml
+title Robustness - Make Payment (Prototype)
+skinparam shadowing false
+skinparam linetype ortho
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 35
+
+actor "Renter" as R
+boundary "Payment UI" as UI
+control "Payment Controller" as PC
+entity "Booking" as B
+entity "Payment" as P
+
+R  -> UI : clickPayNow()
+UI -> PC : payNow(bookingId, method)
+
+PC -> B  : loadBooking(bookingId)
+B  --> PC : amountDue + status
+
+PC -> P  : createTransaction(amount, method)
+P  --> PC : transactionId(SUCCESS)
+
+PC -> B  : setStatus(CONFIRMED)
+B  --> PC : confirmed
+
+PC --> UI : showReceipt(transactionId)
+UI --> R  : displayReceipt()
+
+@enduml
