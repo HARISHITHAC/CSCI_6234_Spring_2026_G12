@@ -1,0 +1,45 @@
+@startuml
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam dpi 220
+skinparam ranksep 70
+skinparam nodesep 45
+
+actor "Renter" as Renter
+actor "Host" as Host
+
+rectangle "RentIT - Smart Rental Platform (Scope)" {
+
+  usecase "Search & Filter Listings"  as UC_Search
+  usecase "Chat with GenAI Concierge" as UC_Chat
+  usecase "Request Booking"           as UC_Book
+  usecase "Make Payment (Prototype)"  as UC_Pay
+  usecase "Manage Listings"           as UC_List
+  usecase "Manage Availability"       as UC_Avail
+
+  ' Force vertical stacking (single column)
+  UC_Search -[hidden]-> UC_Chat
+  UC_Chat   -[hidden]-> UC_Book
+  UC_Book   -[hidden]-> UC_Pay
+  UC_Pay    -[hidden]-> UC_List
+  UC_List   -[hidden]-> UC_Avail
+
+  ' Relationships (ALL labeled)
+  UC_Chat  ..> UC_Search : <<extend>>
+  UC_Pay   ..> UC_Book   : <<include>>
+  UC_Avail ..> UC_List   : <<include>>
+}
+
+' Actor associations
+Renter -left-> UC_Search
+Renter -left-> UC_Chat
+Renter -left-> UC_Book
+Renter -left-> UC_Pay
+
+Host --> UC_List
+Host --> UC_Avail
+Host --> UC_Book
+
+@enduml
