@@ -1,167 +1,107 @@
 @startuml
-title Domain Model - RentIt 
-
-left to right direction
-skinparam shadowing false
-skinparam linetype ortho
+top to bottom direction
 skinparam packageStyle rectangle
-skinparam classAttributeIconSize 0
-skinparam DefaultFontSize 16
-skinparam TitleFontSize 20
-skinparam ArrowFontSize 14
-skinparam nodesep 120
-skinparam ranksep 110
-skinparam padding 25
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 60
 
-hide methods
-
-' ---------- USERS ----------
+' ================= USERS =================
 package "Users" {
+
   class User {
-    +userId: UUID
-    +fullName: String
-    +email: String
-    +phone: String
+    userId: UUID
+    fullName: String
+    email: String
+    phone: String
   }
 
   class Host {
-    +hostRating: float
-    +isVerified: boolean
+    hostRating: float
+    isVerified: boolean
   }
 
   class Renter {
-    +renterRating: float
+    renterRating: float
   }
 
   User <|-- Host
   User <|-- Renter
 }
 
-' ---------- LISTINGS ----------
+' ================= LISTINGS =================
 package "Listings" {
-  enum ListingStatus {
-    ACTIVE
-    INACTIVE
-    SUSPENDED
-  }
-
-  enum ListingType {
-    PROPERTY
-    EQUIPMENT
-  }
 
   class Listing {
-    +listingId: UUID
-    +title: String
-    +description: String
-    +type: ListingType
-    +address: String
-    +pricePerDay: float
-    +status: ListingStatus
-    +createdAt: DateTime
+    listingId: UUID
+    title: String
+    description: String
+    pricePerDay: float
   }
 
   class PropertyListing {
-    +bedrooms: int
-    +bathrooms: int
-    +maxGuests: int
+    bedrooms: int
+    bathrooms: int
+    maxGuests: int
   }
 
   class EquipmentListing {
-    +category: String
-    +condition: String
+    category: String
+    condition: String
   }
 
   class AvailabilitySlot {
-    +slotId: UUID
-    +startDate: Date
-    +endDate: Date
-    +isAvailable: boolean
+    startDate: Date
+    endDate: Date
+    isAvailable: boolean
   }
 
   Listing <|-- PropertyListing
   Listing <|-- EquipmentListing
+  Listing "1" -- "0..*" AvailabilitySlot
 }
 
-' ---------- BOOKINGS ----------
+' ================= BOOKINGS =================
 package "Bookings" {
-  enum BookingStatus {
-    PENDING
-    CONFIRMED
-    CANCELLED
-    COMPLETED
-  }
 
   class Booking {
-    +bookingId: UUID
-    +startDate: Date
-    +endDate: Date
-    +totalAmount: float
-    +status: BookingStatus
-    +createdAt: DateTime
+    bookingId: UUID
+    startDate: Date
+    endDate: Date
+    totalAmount: float
   }
+
 }
 
-' ---------- PAYMENTS ----------
+' ================= PAYMENTS =================
 package "Payments" {
-  enum PaymentStatus {
-    INITIATED
-    SUCCESS
-    FAILED
-    REFUNDED
-  }
-
-  enum PaymentMethod {
-    CARD
-    WALLET
-    CASH
-  }
 
   class Payment {
-    +paymentId: UUID
-    +amount: float
-    +method: PaymentMethod
-    +status: PaymentStatus
-    +paidAt: DateTime
+    paymentId: UUID
+    amount: float
+    paidAt: DateTime
   }
+
+
 }
 
-' ---------- REVIEWS ----------
+' ================= REVIEWS =================
 package "Reviews" {
+
   class Review {
-    +reviewId: UUID
-    +rating: int
-    +comment: String
-    +createdAt: DateTime
+    reviewId: UUID
+    rating: int
+    comment: String
+    createdAt: DateTime
   }
 }
 
-' ---------- RELATIONSHIPS (numbers only on lines; no text overlap) ----------
-Host  "1" -- "0..*" Listing  : (R1)
-Renter "1" -- "0..*" Booking : (R2)
-Booking "0..*" -- "1" Listing : (R3)
-Booking "1" *-- "0..1" Payment : (R4)
-Listing "1" *-- "0..*" AvailabilitySlot : (R5)
-Renter "1" -- "0..*" Review : (R6)
-Review "0..*" -- "1" Listing : (R7)
-Review "0..*" -- "1" Host    : (R8)
+' ================= RELATIONSHIPS =================
 
-' ---------- Layout helpers ----------
-User -[hidden]- Listing
-Listing -[hidden]- Booking
-Booking -[hidden]- Payment
-Payment -[hidden]- Review
-
-' ---------- Plain-text mapping (no boxes on diagram lines) ----------
-legend left
-R1 = creates
-R2 = makes
-R3 = for
-R4 = payment
-R5 = availability
-R6 = writes
-R7 = about
-R8 = forHost
-endlegend
+Host "1" -- "0..*" Listing : creates
+Renter "1" -- "0..*" Booking : makes
+Listing "1" -- "0..*" Booking : for
+Booking "1" -- "0..1" Payment : has
+Renter "1" -- "0..*" Review : writes
+Listing "1" -- "0..*" Review : receives
 
 @enduml
