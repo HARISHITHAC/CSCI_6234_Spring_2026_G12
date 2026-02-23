@@ -1,101 +1,76 @@
 @startuml
 top to bottom direction
-skinparam packageStyle rectangle
-skinparam linetype ortho
+hide empty members
 skinparam nodesep 50
 skinparam ranksep 60
 
-' ================= USERS =================
-package "Users" {
-
-  class User {
-    userId: UUID
-    fullName: String
-    email: String
-    phone: String
-  }
-
-  class Host {
-    hostRating: float
-    isVerified: boolean
-  }
-
-  class Renter {
-    renterRating: float
-  }
-
-  User <|-- Host
-  User <|-- Renter
+class User {
+  userId: UUID
+  fullName: String
+  email: String
+  phone: String
 }
 
-' ================= LISTINGS =================
-package "Listings" {
-
-  class Listing {
-    listingId: UUID
-    title: String
-    description: String
-    pricePerDay: float
-  }
-
-  class PropertyListing {
-    bedrooms: int
-    bathrooms: int
-    maxGuests: int
-  }
-
-  class EquipmentListing {
-    category: String
-    condition: String
-  }
-
-  class AvailabilitySlot {
-    startDate: Date
-    endDate: Date
-    isAvailable: boolean
-  }
-
-  Listing <|-- PropertyListing
-  Listing <|-- EquipmentListing
-  Listing "1" -- "0..*" AvailabilitySlot
+class Host {
+  hostRating: float
+  isVerified: boolean
 }
 
-' ================= BOOKINGS =================
-package "Bookings" {
-
-  class Booking {
-    bookingId: UUID
-    startDate: Date
-    endDate: Date
-    totalAmount: float
-  }
-
+class Renter {
+  renterRating: float
 }
 
-' ================= PAYMENTS =================
-package "Payments" {
-
-  class Payment {
-    paymentId: UUID
-    amount: float
-    paidAt: DateTime
-  }
-
-
+class Listing {
+  listingId: UUID
+  title: String
+  description: String
+  pricePerDay: float
 }
 
-' ================= REVIEWS =================
-package "Reviews" {
-
-  class Review {
-    reviewId: UUID
-    rating: int
-    comment: String
-    createdAt: DateTime
-  }
+class PropertyListing {
+  bedrooms: int
+  bathrooms: int
+  maxGuests: int
 }
 
-' ================= RELATIONSHIPS =================
+class EquipmentListing {
+  category: String
+  condition: String
+}
+
+class AvailabilitySlot {
+  startDate: Date
+  endDate: Date
+  isAvailable: boolean
+}
+
+class Booking {
+  bookingId: UUID
+  startDate: Date
+  endDate: Date
+  totalAmount: float
+}
+
+class Payment {
+  paymentId: UUID
+  amount: float
+  paidAt: DateTime
+}
+
+class Review {
+  reviewId: UUID
+  rating: int
+  comment: String
+  createdAt: DateTime
+}
+
+User <|-- Host
+User <|-- Renter
+
+Listing <|-- PropertyListing
+Listing <|-- EquipmentListing
+
+Listing "1" -- "0..*" AvailabilitySlot
 
 Host "1" -- "0..*" Listing : creates
 Renter "1" -- "0..*" Booking : makes
