@@ -1,0 +1,40 @@
+@startuml
+title Activity Diagram - Manage Availability
+
+' =========================================================
+' TEXT DESCRIPTION (Steps map to actions)
+' Step 1  Host opens availability for a listing.
+' Step 2  Host selects action (block dates or open dates).
+' Step 3  Host selects date range.
+' Step 4  System validates range.
+' Step 5  If invalid, system shows error (end).
+' Step 6  If valid, system updates availability slots.
+' Step 7  System shows updated calendar (end).
+' =========================================================
+
+skinparam shadowing false
+skinparam linetype ortho
+skinparam DefaultFontSize 16
+skinparam ArrowFontSize 14
+skinparam nodesep 30
+skinparam ranksep 30
+
+|Host|
+start
+:1. Open availability;
+:2. Choose block/open;
+:3. Select date range;
+
+|System|
+:4. Validate date range;
+
+if (Valid?) then (Yes)
+  :6. Update availability slots;
+  :7. Show updated calendar;
+  stop
+else (No)
+  :5. Show error;
+  stop
+endif
+
+@enduml

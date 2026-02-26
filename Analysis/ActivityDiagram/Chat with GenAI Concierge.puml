@@ -1,0 +1,46 @@
+@startuml
+title Activity Diagram - Chat with GenAI Concierge
+
+' =========================================================
+' TEXT DESCRIPTION (Steps map to actions)
+' Step 1  Renter opens chat.
+' Step 2  Renter asks question or shares preferences.
+' Step 3  System (GenAI) asks follow-up questions if needed.
+' Step 4  System generates recommendations or answers.
+' Step 5  System updates search criteria (extends Search & Filter).
+' Step 6  System shows recommended listings.
+' Step 7  Renter selects a listing or ends chat.
+' =========================================================
+
+skinparam shadowing false
+skinparam linetype ortho
+skinparam DefaultFontSize 16
+skinparam ArrowFontSize 14
+skinparam nodesep 30
+skinparam ranksep 30
+
+|Renter|
+start
+:1. Open concierge chat;
+:2. Ask question / give preferences;
+
+|System|
+:3. Ask follow-up (if needed);
+
+if (Need more info?) then (Yes)
+  |Renter|
+  :3. Provide missing details;
+  |System|
+  :3. Confirm preferences;
+else (No)
+endif
+
+:4. Generate answer/recommendations;
+:5. Update criteria\n(extends Search);
+:6. Show recommended listings;
+
+|Renter|
+:7. Select listing\nor end chat;
+stop
+
+@enduml

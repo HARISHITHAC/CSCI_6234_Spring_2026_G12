@@ -1,0 +1,49 @@
+@startuml
+title Activity Diagram - Request Booking
+
+' =========================================================
+' TEXT DESCRIPTION (Steps map to actions)
+' Step 1  Renter selects a listing.
+' Step 2  Renter selects dates.
+' Step 3  Renter submits booking request.
+' Step 4  System validates request (dates + listing status).
+' Step 5  System checks availability.
+' Step 6  If not available, system shows "Not available" (end).
+' Step 7  If available, system creates booking with status PENDING.
+' Step 8  System shows booking summary.
+' Step 9  Renter confirms to proceed to payment (include Make Payment).
+' Step 10 System forwards to payment use case (end here).
+' =========================================================
+
+skinparam shadowing false
+skinparam linetype ortho
+skinparam DefaultFontSize 16
+skinparam ArrowFontSize 14
+skinparam nodesep 30
+skinparam ranksep 30
+
+|Renter|
+start
+:1. Select listing;
+:2. Select dates;
+:3. Submit booking request;
+
+|System|
+:4. Validate request;
+:5. Check availability;
+
+if (Available?) then (Yes)
+  :7. Create booking (PENDING);
+  :8. Show booking summary;
+
+  |Renter|
+  :9. Confirm proceed to payment;
+  |System|
+  :10. Call "Make Payment"\n(<<include>>);
+  stop
+else (No)
+  :6. Show "Not available";
+  stop
+endif
+
+@enduml

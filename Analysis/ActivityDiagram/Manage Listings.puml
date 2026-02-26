@@ -1,0 +1,49 @@
+@startuml
+title Activity Diagram - Manage Listings
+
+' =========================================================
+' TEXT DESCRIPTION (Steps map to actions)
+' Step 1  Host opens listing management.
+' Step 2  Host chooses create or edit listing.
+' Step 3  Host enters/updates listing details.
+' Step 4  System validates listing data.
+' Step 5  If invalid, system shows error (end).
+' Step 6  If valid, system saves listing.
+' Step 7  Host optionally manages availability (include Manage Availability).
+' Step 8  System confirms changes (end).
+' =========================================================
+
+skinparam shadowing false
+skinparam linetype ortho
+skinparam DefaultFontSize 16
+skinparam ArrowFontSize 14
+skinparam nodesep 30
+skinparam ranksep 30
+
+|Host|
+start
+:1. Open listing management;
+:2. Choose create/edit;
+:3. Enter/update details;
+
+|System|
+:4. Validate listing data;
+
+if (Valid?) then (Yes)
+  :6. Save listing;
+
+  |Host|
+  if (Manage availability now?) then (Yes)
+    :7. Choose manage availability;
+    |System|
+    :7. Call "Manage Availability"\n(<<include>>);
+  endif
+
+  :8. Confirm changes;
+  stop
+else (No)
+  :5. Show validation error;
+  stop
+endif
+
+@enduml

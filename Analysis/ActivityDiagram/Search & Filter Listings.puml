@@ -1,0 +1,55 @@
+@startuml
+title Activity Diagram - Search & Filter Listings
+
+' =========================================================
+' TEXT DESCRIPTION (Steps map to actions)
+' Step 1  Renter opens the app.
+' Step 2  Renter enters search criteria (location/type/budget/dates).
+' Step 3  System validates criteria.
+' Step 4  If invalid, system asks renter to correct criteria (end).
+' Step 5  System searches listings and checks availability.
+' Step 6  System displays results.
+' Step 7  Renter optionally refines filters and repeats search, or ends.
+' =========================================================
+
+skinparam shadowing false
+skinparam linetype ortho
+skinparam DefaultFontSize 16
+skinparam ArrowFontSize 14
+skinparam nodesep 30
+skinparam ranksep 30
+
+|Renter|
+start
+:1. Open app;
+:2. Enter criteria;
+
+|System|
+:3. Validate criteria;
+
+if (Criteria valid?) then (Yes)
+  :5. Search listings\n+ check availability;
+  :6. Display results;
+
+  |Renter|
+  if (Refine filters?) then (Yes)
+    :7. Refine filters/dates;
+    |System|
+    :5. Search listings\n+ check availability;
+    :6. Display results;
+    |Renter|
+    :7. Stop refining;
+    stop
+  else (No)
+    :7. Finish search;
+    stop
+  endif
+
+else (No)
+  :4. Show validation error;
+  |Renter|
+  :4. Stop / fix later;
+  stop
+endif
+
+@enduml

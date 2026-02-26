@@ -1,0 +1,51 @@
+@startuml
+title Activity Diagram - Make Payment (Prototype)
+
+' =========================================================
+' TEXT DESCRIPTION (Steps map to actions)
+' Step 1  System shows payment screen for a PENDING booking.
+' Step 2  Renter enters payment details.
+' Step 3  Renter confirms payment.
+' Step 4  System processes payment (prototype).
+' Step 5  If failed, system shows failure and renter retries or cancels (end).
+' Step 6  If success, system marks payment SUCCESS.
+' Step 7  System updates booking to CONFIRMED.
+' Step 8  System shows receipt/confirmation (end).
+' =========================================================
+
+skinparam shadowing false
+skinparam linetype ortho
+skinparam DefaultFontSize 16
+skinparam ArrowFontSize 14
+skinparam nodesep 30
+skinparam ranksep 30
+
+|System|
+start
+:1. Show payment screen;
+
+|Renter|
+:2. Enter payment details;
+:3. Confirm payment;
+
+|System|
+:4. Process payment (prototype);
+
+if (Payment successful?) then (Yes)
+  :6. Mark payment SUCCESS;
+  :7. Set booking CONFIRMED;
+  :8. Show receipt/confirmation;
+  stop
+else (No)
+  :5. Show payment failed;
+  |Renter|
+  if (Retry?) then (Yes)
+    :5. Retry payment later;
+    stop
+  else (No)
+    :5. Cancel payment;
+    stop
+  endif
+endif
+
+@enduml
