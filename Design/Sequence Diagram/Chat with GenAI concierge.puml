@@ -1,0 +1,28 @@
+@startuml
+title Sequence Diagram - Chat with GenAI Concierge
+
+actor Renter
+boundary "Chat UI" as UI
+control "ConciergeController" as CC
+control "RecommendationService" as RS
+entity "Listing" as Listing
+entity "AvailabilitySlot" as Slot
+
+Renter -> UI : openChat()
+UI -> CC : startSession(renterId)
+CC --> UI : promptForPreferences()
+
+Renter -> UI : sendMessage(preferencesText)
+UI -> CC : parsePreferences(preferencesText)
+CC -> RS : buildCriteria(preferences)
+RS --> CC : criteria
+
+CC -> Listing : findByCriteria(criteria)
+Listing --> CC : candidateListings
+CC -> Slot : getAvailability(candidateListings, dates)
+Slot --> CC : availabilityInfo
+
+CC --> UI : respondWithRecommendations(list, availability)
+UI --> Renter : showRecommendations()
+
+@enduml
