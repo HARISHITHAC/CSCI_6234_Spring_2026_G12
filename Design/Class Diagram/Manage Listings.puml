@@ -1,0 +1,32 @@
+@startuml
+title Sequence Diagram - Manage Listings
+
+actor Host
+boundary "Host Listings UI" as UI
+control "ListingController" as LC
+entity "Listing" as Listing
+
+Host -> UI : openListingManager()
+UI -> LC : listMyListings(hostId)
+
+LC -> Listing : findByHost(hostId)
+Listing --> LC : listings
+LC --> UI : showListings(listings)
+
+Host -> UI : createOrEditListing(data)
+UI -> LC : saveListing(hostId, data)
+
+LC -> Listing : validate(data)
+Listing --> LC : valid/invalid
+
+alt Valid
+  LC -> Listing : save(hostId, data)
+  Listing --> LC : listingId
+  LC --> UI : showSaved(listingId)
+  UI --> Host : confirmation()
+else Invalid
+  LC --> UI : showValidationError()
+  UI --> Host : fixAndRetry()
+end
+
+@enduml
