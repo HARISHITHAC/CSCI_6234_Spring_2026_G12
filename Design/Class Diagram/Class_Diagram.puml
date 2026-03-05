@@ -1,0 +1,140 @@
+@startuml
+title Complete Class Diagram - RentMate (Easy / Entities Only)
+
+left to right direction
+skinparam shadowing false
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam DefaultFontSize 16
+skinparam TitleFontSize 20
+skinparam ArrowFontSize 14
+skinparam nodesep 90
+skinparam ranksep 90
+skinparam padding 25
+
+' --------------------
+' USERS (Entities)
+' --------------------
+class User {
+  +userId: UUID
+  +fullName: String
+  +email: String
+  +phone: String
+  --
+  +login(email: String, password: String): boolean
+  +logout(): void
+}
+
+class Host {
+  +hostRating: float
+  +isVerified: boolean
+  --
+  +createListing(data: Map): UUID
+  +updateListing(listingId: UUID, data: Map): void
+}
+
+class Renter {
+  +renterRating: float
+  --
+  +requestBooking(listingId: UUID, start: Date, end: Date): UUID
+  +makePayment(bookingId: UUID, method: String): UUID
+}
+
+User <|-- Host
+User <|-- Renter
+
+' --------------------
+' LISTINGS (Entities)
+' --------------------
+abstract class Listing {
+  +listingId: UUID
+  +title: String
+  +description: String
+  +address: String
+  +pricePerDay: float
+  --
+  +updateDetails(data: Map): void
+  +setActive(isActive: boolean): void
+}
+
+class PropertyListing {
+  +bedrooms: int
+  +bathrooms: int
+  +maxGuests: int
+}
+
+class EquipmentListing {
+  +category: String
+  +condition: String
+}
+
+Listing <|-- PropertyListing
+Listing <|-- EquipmentListing
+
+class AvailabilitySlot {
+  +slotId: UUID
+  +startDate: Date
+  +endDate: Date
+  +isAvailable: boolean
+  --
+  +block(start: Date, end: Date): void
+  +isInRange(start: Date, end: Date): boolean
+}
+
+' --------------------
+' BOOKING (Entity)
+' --------------------
+class Booking {
+  +bookingId: UUID
+  +startDate: Date
+  +endDate: Date
+  +totalAmount: float
+  +status: String
+  --
+  +calculateTotal(pricePerDay: float): float
+  +setStatus(status: String): void
+}
+
+' --------------------
+' PAYMENT (Entity)
+' --------------------
+class Payment {
+  +paymentId: UUID
+  +amount: float
+  +method: String
+  +status: String
+  +paidAt: DateTime
+  --
+  +markSuccess(): void
+  +markFailed(reason: String): void
+}
+
+' --------------------
+' REVIEW (Entity)
+' --------------------
+class Review {
+  +reviewId: UUID
+  +rating: int
+  +comment: String
+  +createdAt: DateTime
+  --
+  +edit(comment: String): void
+}
+
+' --------------------
+' ASSOCIATIONS (Clear + Required)
+' --------------------
+Host "1" -- "0..*" Listing : owns
+Listing "1" *-- "0..*" AvailabilitySlot : availability
+
+Renter "1" -- "0..*" Booking : makes
+Booking "0..*" -- "1" Listing : for
+
+Booking "1" *-- "0..1" Payment : payment
+
+Renter "1" -- "0..*" Review : writes
+Review "0..*" -- "1" Listing : about
+Review "0..*" -- "0..1" Host : forHost
+
+@enduml
