@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentIt - Smart Rental Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="ambient ambient-one"></div>
+<div class="ambient ambient-two"></div>
+<main class="shell">
+    <header class="masthead">
+        <div>
+            <p class="eyebrow">RentIt Platform</p>
+            <h1>Smart rentals that move from search to booking and payment in minutes.</h1>
+            <p class="lead">Production-style prototype with host approval workflows, payment simulation, reviews, and an AI concierge.</p>
+        </div>
+        <div class="demo-credentials">
+            <h3>Demo Accounts</h3>
+            <p><strong>Renter:</strong> renter@rentit.local</p>
+            <p><strong>Host:</strong> host@rentit.local</p>
+            <p><strong>Admin:</strong> admin@rentit.local</p>
+            <p><strong>Password:</strong> password123</p>
+        </div>
+    </header>
+
+    <section id="authSection" class="auth-shell">
+        <article class="glass-card auth-card">
+            <div class="auth-tabs">
+                <button id="authTabLogin" type="button" class="auth-tab active">Login</button>
+                <button id="authTabRegister" type="button" class="auth-tab">Register</button>
+            </div>
+
+            <div id="loginPane" class="auth-pane">
+                <h2>Welcome Back</h2>
+                <p class="section-subtitle">Sign in to continue renting or hosting.</p>
+                <form id="loginForm" class="form">
+                    <label>Email <input type="email" name="email" required></label>
+                    <label>Password <input type="password" name="password" required></label>
+                    <button type="submit">Login</button>
+                </form>
+                <p class="auth-switch">No account? <button id="authToRegister" type="button" class="linklike">Create one</button></p>
+            </div>
+
+            <div id="registerPane" class="auth-pane hidden">
+                <h2>Create Account</h2>
+                <p class="section-subtitle">Join as renter or host in under a minute.</p>
+                <form id="registerForm" class="form">
+                    <label>Name <input type="text" name="name" required></label>
+                    <label>Email <input type="email" name="email" required></label>
+                    <label>Password <input type="password" name="password" minlength="6" required></label>
+                    <label>Role
+                        <select name="role" required>
+                            <option value="RENTER">Renter</option>
+                            <option value="HOST">Host</option>
+                        </select>
+                    </label>
+                    <button type="submit">Create Account</button>
+                </form>
+                <p class="auth-switch">Already registered? <button id="authToLogin" type="button" class="linklike">Back to login</button></p>
+            </div>
+        </article>
+    </section>
+
+    <section id="appSection" class="hidden">
+        <div class="toolbar glass-card">
+            <div>
+                <h2 id="userLabel">Welcome</h2>
+                <p id="userMeta" class="section-subtitle"></p>
+            </div>
+            <div class="actions">
+                <button id="refreshBtn" class="ghost">Refresh</button>
+                <button id="logoutBtn" class="ghost">Logout</button>
+            </div>
+        </div>
+
+        <div id="appViewTabs" class="view-tabs">
+            <button type="button" class="view-tab active" data-view="marketplace">Marketplace</button>
+            <button type="button" class="view-tab" data-view="bookings">My Bookings</button>
+            <button type="button" class="view-tab" data-view="concierge">AI Concierge</button>
+            <button id="hostViewTab" type="button" class="view-tab hidden" data-view="host">Host Console</button>
+        </div>
+
+        <section id="viewMarketplace" class="glass-card view-panel">
+            <h2>Find Listings</h2>
+            <p class="section-subtitle">Apply filters, check availability, and book instantly.</p>
+            <form id="searchForm" class="form search-grid">
+                <label>Keyword <input type="text" name="q" placeholder="bike, studio, loft"></label>
+                <label>Location <input type="text" name="location" placeholder="New York"></label>
+                <label>Kind
+                    <select name="kind">
+                        <option value="">Any</option>
+                        <option value="PROPERTY">Property</option>
+                        <option value="EQUIPMENT">Equipment</option>
+                    </select>
+                </label>
+                <label>Start Date <input type="date" name="startDate"></label>
+                <label>End Date <input type="date" name="endDate"></label>
+                <label>Quantity <input type="number" name="quantity" min="1" value="1"></label>
+                <label>Min Price <input type="number" name="minPrice" min="1" step="0.01"></label>
+                <label>Max Price <input type="number" name="maxPrice" min="1" step="0.01"></label>
+                <button type="submit">Search</button>
+            </form>
+            <div id="listingResults" class="cards"></div>
+        </section>
+
+        <section id="viewBookings" class="glass-card view-panel hidden">
+            <h2>My Bookings</h2>
+            <p class="section-subtitle">Track approvals, payments, and receipts.</p>
+            <div id="myBookings" class="stack"></div>
+        </section>
+
+        <section id="viewConcierge" class="glass-card view-panel hidden">
+            <h2>AI Concierge</h2>
+            <p class="section-subtitle">Use natural language for recommendations.</p>
+            <div class="chat-controls">
+                <button id="startChatBtn">Start Chat</button>
+            </div>
+            <div id="chatQuickPrompts" class="quick-prompts">
+                <button type="button" class="quick-prompt">got any bikes?</button>
+                <button type="button" class="quick-prompt">show me lofts in new york</button>
+                <button type="button" class="quick-prompt">need equipment under $50</button>
+            </div>
+            <div id="chatHistory" class="chat-history"></div>
+            <form id="chatForm" class="form">
+                <label>Message
+                    <input type="text" name="text" placeholder="Need a mountain bike in New York under $50/day" required>
+                </label>
+                <button type="submit">Send</button>
+            </form>
+            <div id="chatRecommendations" class="cards compact"></div>
+        </section>
+
+        <section id="viewHost" class="glass-card view-panel hidden">
+            <div id="hostSection">
+                <h2>Host Console</h2>
+                <p class="section-subtitle">Manage listings, availability, and booking approvals.</p>
+                <div class="host-grid">
+                    <div>
+                        <h3>Create Listing</h3>
+                        <form id="createListingForm" class="form">
+                            <label>Kind
+                                <select name="kind" id="createKind" required>
+                                    <option value="PROPERTY">Property</option>
+                                    <option value="EQUIPMENT">Equipment</option>
+                                </select>
+                            </label>
+                            <label>Title <input type="text" name="title" required></label>
+                            <label>Description <textarea name="description" required></textarea></label>
+                            <label>Location <input type="text" name="location" required></label>
+                            <label>Image URL <input type="url" name="imageUrl" placeholder="https://..."></label>
+                            <label>Price Per Day <input type="number" name="pricePerDay" min="1" step="0.01" required></label>
+                            <label>Total Quantity <input type="number" name="totalQuantity" min="1" value="1" required></label>
+                            <label>Host Approval Required
+                                <select name="hostApprovalRequired">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </label>
+
+                            <div id="propertyFields">
+                                <label>Property Type <input type="text" name="propertyType"></label>
+                                <label>Max Guests <input type="number" name="maxGuests" min="1"></label>
+                            </div>
+                            <div id="equipmentFields" class="hidden">
+                                <label>Equipment Type <input type="text" name="equipmentType"></label>
+                                <label>Condition <input type="text" name="conditionText"></label>
+                            </div>
+
+                            <button type="submit">Save Listing</button>
+                        </form>
+                    </div>
+                    <div>
+                        <h3>Pending Approvals</h3>
+                        <div id="pendingBookings" class="stack"></div>
+                    </div>
+                </div>
+
+                <h3>My Listings</h3>
+                <div id="myListings" class="cards"></div>
+            </div>
+        </section>
+    </section>
+</main>
+<div id="toast" class="toast hidden"></div>
+<script src="/app.js"></script>
+</body>
+</html>
